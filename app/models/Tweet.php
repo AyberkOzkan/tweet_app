@@ -3,7 +3,7 @@ class Tweet {
     private $db;
 
     public function __construct() {
-        $this->db = new Database;
+        $this->db = new Database();
     }
 
     public function getTweets() {
@@ -16,6 +16,12 @@ class Tweet {
         $this->db->bind(':user_id', $data['user_id']);
         $this->db->bind(':tweet', $data['tweet']);
         return $this->db->execute();
+    }
+
+    public function getUserTweets($userId) {
+        $this->db->query('SELECT * FROM tweets WHERE user_id = :user_id ORDER BY created_at DESC');
+        $this->db->bind(':user_id', $userId);
+        return $this->db->resultSet();
     }
 }
 ?>
