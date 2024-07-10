@@ -13,13 +13,29 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
     <div class="container">
-        <a class="navbar-brand" href="<?php echo URLROOT; ?>">Y</a>
+        <a class="navbar-brand" href="<?php echo URLROOT; ?>">TweetApp</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
                 <?php if(isset($_SESSION['user_id'])) : ?>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Notifications
+                            <?php if ($_SESSION['unread_notifications_count'] > 0) : ?>
+                                <span class="badge badge-danger"><?php echo $_SESSION['unread_notifications_count']; ?></span>
+                            <?php endif; ?>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                            <?php foreach ($_SESSION['notifications'] as $notification) : ?>
+                                <a class="dropdown-item" href="<?php echo URLROOT; ?>/notifications/viewNotification/<?php echo $notification->id; ?>"><?php echo $notification->message; ?></a>
+                            <?php endforeach; ?>
+                            <?php if (empty($_SESSION['notifications'])) : ?>
+                                <a class="dropdown-item" href="#">No notifications</a>
+                            <?php endif; ?>
+                        </div>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="<?php echo URLROOT; ?>/profile">Profile</a>
                     </li>
@@ -129,3 +145,44 @@
     </div>
 </div>
 
+<!-- Edit Profile Modal -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editProfileForm" action="<?php echo URLROOT; ?>/profile/update" method="post">
+                    <div class="form-group">
+                        <label for="email">Email: <sup>*</sup></label>
+                        <input type="email" name="email" class="form-control form-control-lg" value="<?php echo $_SESSION['user_email']; ?>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="birthday">Birthday: <sup>*</sup></label>
+                        <input type="date" name="birthday" class="form-control form-control-lg" value="<?php echo $_SESSION['user_birthday']; ?>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">New Password: <sup>*</sup></label>
+                        <input type="password" name="password" class="form-control form-control-lg" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function updateCharacterCount(textarea) {
+        var maxLength = 180;
+        var currentLength = textarea.value.length;
+        var remaining = maxLength - currentLength;
+        document.getElementById('charCount').innerText = remaining + ' characters remaining';
+    }
+</script>

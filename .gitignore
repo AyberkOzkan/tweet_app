@@ -1,0 +1,66 @@
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Node modules
+node_modules/
+npm-debug.log
+
+# Composer dependencies
+vendor/
+
+# PHPStorm project files
+.idea/
+
+# Laravel specific
+.env
+Homestead.yaml
+Homestead.json
+/vagrant/
+/public/storage
+/storage/*.key
+.env.testing
+
+# Mac specific
+*.DS_Store
+
+# Windows specific
+Thumbs.db
+Desktop.ini
+
+# Log files
+*.log
+
+# Symfony specific
+/var/
+/vendor/
+/public/bundles/
+/public/build/
+
+# Laravel specific
+.env
+*.log
+storage/
+vendor/
+
+# Temporary files
+*.swp
+*.swo
+*.bak
+*.tmp
+
+# XAMPP specific
+/xamppfiles/
+/htdocs/
+/mysql/
+/phpmyadmin/
+/php/logs/
+/tmp/
+
+# Ignore all files in the logs and cache directories
+/logs/*
+/cache/*
+
+# Ignore the Composer lock file and other files specific to Composer
+composer.lock
+composer.phar

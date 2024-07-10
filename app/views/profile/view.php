@@ -7,7 +7,13 @@
     <p>Followers: <?php echo $data['followersCount']; ?></p>
     <p>Following: <?php echo $data['followingCount']; ?></p>
 
-    <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#editProfileModal">Edit Profile</a>
+    <?php if (isset($_SESSION['user_id']) && $_SESSION['user_id'] != $data['user']->id) : ?>
+        <?php if ($data['isFollowing']) : ?>
+            <a href="<?php echo URLROOT; ?>/profile/unfollow/<?php echo $data['user']->id; ?>" class="btn btn-danger">Unfollow</a>
+        <?php else : ?>
+            <a href="<?php echo URLROOT; ?>/profile/follow/<?php echo $data['user']->id; ?>" class="btn btn-primary">Follow</a>
+        <?php endif; ?>
+    <?php endif; ?>
 
     <h2 class="mt-5">Tweets</h2>
     <?php if (!empty($data['tweets'])): ?>
@@ -20,7 +26,7 @@
             </div>
         <?php endforeach; ?>
     <?php else: ?>
-        <p>You have not posted any tweets yet.</p>
+        <p>This user has not posted any tweets yet.</p>
     <?php endif; ?>
 </div>
 

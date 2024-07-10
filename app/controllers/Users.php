@@ -29,10 +29,8 @@ class Users {
 
     public function login() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Sanitize POST data
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
     
-            // Init data
             $data = [
                 'username' => trim($_POST['username']),
                 'password' => trim($_POST['password']),
@@ -40,55 +38,65 @@ class Users {
                 'password_err' => ''
             ];
     
-            // Validate username
             if (empty($data['username'])) {
                 $data['username_err'] = 'Please enter username';
             }
     
-            // Validate password
             if (empty($data['password'])) {
                 $data['password_err'] = 'Please enter password';
             }
     
-            // Make sure errors are empty
             if (empty($data['username_err']) && empty($data['password_err'])) {
-                // Check and set logged in user
                 $loggedInUser = $this->userModel->login($data['username'], $data['password']);
     
                 if ($loggedInUser) {
-                    // Create Session
                     $_SESSION['user_id'] = $loggedInUser->id;
                     $_SESSION['username'] = $loggedInUser->username;
-                    $_SESSION['message'] = [
-                        'type' => 'success',
-                        'text' => 'You are logged in.'
-                    ];
-                    header('location: ' . URLROOT);
-                    exit();
+                    $_SESSION['user_email'] = $loggedInUser->email;
+                    $_SESSION['user_birthday'] = $loggedInUser->birthday;
+    
+                    // Get notifications
+                    $notifications = $this->userModel->getNotifications($loggedInUser->id);
+                    $_SESSION['notifications'] = $notifications;
+                    $_SESSION['unread_notifications_count'] = $this->userModel->getUnreadNotificationsCount($loggedInUser->id);
+    
+                    foreach ($notifications as $notification) {
+                        if ($notification->status == 'unread') {
+                            echo "<script>
+                                Swal.fire({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    icon: 'info',
+                                    title: '{$notification->message}'
+                                });
+                            </script>";
+                            $this->userModel->markNotificationAsRead($notification->id);
+                        }
+                    }
+    
+                    header('location: ' . URLROOT . '/');
                 } else {
                     $data['password_err'] = 'Password incorrect';
+    
                     $this->view('users/login', $data);
-                    return;
                 }
             } else {
-                // Load view with errors
                 $this->view('users/login', $data);
-                return;
             }
         } else {
-            // Init data
             $data = [
                 'username' => '',
                 'password' => '',
                 'username_err' => '',
                 'password_err' => ''
             ];
+    
+            $this->view('users/login', $data);
         }
-    
-        // Load view
-        $this->view('users/login', $data);
     }
-    
+
     public function register() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Sanitize POST data

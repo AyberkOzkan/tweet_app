@@ -7,7 +7,7 @@
             <div class="card card-body mb-3">
                 <p><?php echo $tweet->tweet; ?></p>
                 <div class="bg-light p-2 mb-3">
-                    Written by <?php echo $tweet->username; ?> on <?php echo $tweet->created_at; ?>
+                    Written by <a href="<?php echo URLROOT; ?>/profile/userProfile/<?php echo $tweet->user_id; ?>"><?php echo $tweet->username; ?></a> on <?php echo $tweet->created_at; ?>
                 </div>
             </div>
         <?php endforeach; ?>

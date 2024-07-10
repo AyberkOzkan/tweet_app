@@ -35,7 +35,7 @@ class Home {
         $this->view('home/index', ['tweets' => $tweets]);
     }
 
-    public function view($view, $data = []) {
+    private function view($view, $data = []) {
         $viewPath = dirname(dirname(__DIR__)) . '/app/views/' . $view . '.php';
         if (file_exists($viewPath)) {
             require_once $viewPath;
