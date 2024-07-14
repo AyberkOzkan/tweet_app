@@ -3,6 +3,7 @@
 $baseDir = dirname(dirname(__DIR__));
 $corePath = $baseDir . '/core/Database.php';
 $tweetModelPath = $baseDir . '/app/models/Tweet.php';
+$userModelPath = $baseDir . '/app/models/User.php';  // User modelini ekleyin
 
 if (file_exists($corePath)) {
     require_once $corePath;
@@ -16,23 +17,36 @@ if (file_exists($tweetModelPath)) {
     die("Tweet.php not found at $tweetModelPath<br>");
 }
 
+if (file_exists($userModelPath)) {  // User modelini ekleyin
+    require_once $userModelPath;
+} else {
+    die("User.php not found at $userModelPath<br>");
+}
+
 class Home {
-    private $tweetModel;
+    private $userModel;
 
     public function __construct() {
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
 
-        $this->tweetModel = new Tweet();
+        $this->userModel = new User();
     }
 
     public function index() {
-        // Get tweets
-        $tweets = $this->tweetModel->getTweets();
+        if (!isset($_SESSION['user_id'])) {
+            header('location: ' . URLROOT . '/users/login');
+            exit();
+        }
 
-        // Load view
-        $this->view('home/index', ['tweets' => $tweets]);
+        $tweets = $this->userModel->getHomeTweets($_SESSION['user_id']);
+
+        $data = [
+            'tweets' => $tweets
+        ];
+
+        $this->view('home/index', $data);
     }
 
     private function view($view, $data = []) {

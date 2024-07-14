@@ -1,6 +1,7 @@
 # Operating system files
 .DS_Store
 Thumbs.db
+Desktop.ini
 
 # Node modules
 node_modules/
@@ -8,9 +9,28 @@ npm-debug.log
 
 # Composer dependencies
 vendor/
+composer.lock
+composer.phar
 
-# PHPStorm project files
+# IDE specific files
 .idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Temporary files
+*.swp
+*.swo
+*.bak
+*.tmp
+*.log
+
+# Mac specific
+*.DS_Store
+
+# Windows specific
+Thumbs.db
+Desktop.ini
 
 # Laravel specific
 .env
@@ -21,33 +41,11 @@ Homestead.json
 /storage/*.key
 .env.testing
 
-# Mac specific
-*.DS_Store
-
-# Windows specific
-Thumbs.db
-Desktop.ini
-
-# Log files
-*.log
-
 # Symfony specific
 /var/
 /vendor/
 /public/bundles/
 /public/build/
-
-# Laravel specific
-.env
-*.log
-storage/
-vendor/
-
-# Temporary files
-*.swp
-*.swo
-*.bak
-*.tmp
 
 # XAMPP specific
 /xamppfiles/
@@ -61,6 +59,18 @@ vendor/
 /logs/*
 /cache/*
 
-# Ignore the Composer lock file and other files specific to Composer
-composer.lock
-composer.phar
+# Ignore environment files
+.env
+
+# Ignore build artifacts
+/public/build/
+/public/cache/
+/public/storage/
+
+# Ignore downloaded or generated public files
+public/css/sweetalert2.css
+public/css/sweetalert2.min.css
+public/js/sweetalert2.all.js
+public/js/sweetalert2.all.min.js
+public/js/sweetalert2.js
+public/js/sweetalert2.min.js

@@ -1,21 +1,5 @@
 <?php
 
-$baseDir = dirname(dirname(__DIR__));
-$corePath = $baseDir . '/core/Database.php';
-$userModelPath = $baseDir . '/app/models/User.php';
-
-if (file_exists($corePath)) {
-    require_once $corePath;
-} else {
-    die("Database.php not found at $corePath<br>");
-}
-
-if (file_exists($userModelPath)) {
-    require_once $userModelPath;
-} else {
-    die("User.php not found at $userModelPath<br>");
-}
-
 class Notifications {
     private $userModel;
 
@@ -32,15 +16,15 @@ class Notifications {
             header('location: ' . URLROOT . '/users/login');
             exit();
         }
-
+    
         $notifications = $this->userModel->getNotifications($_SESSION['user_id']);
-
+    
         $data = [
             'notifications' => $notifications
         ];
-
+    
         $this->view('notifications/index', $data);
-    }
+    }    
 
     public function viewNotification($id) {
         if (!isset($_SESSION['user_id'])) {
@@ -57,8 +41,59 @@ class Notifications {
         exit();
     }
 
-    public function view($view, $data = []) {
-        $viewPath = dirname(dirname(__DIR__)) . '/app/views/' . $view . '.php';
+    public function acceptFollowRequest($id) {
+        if (!isset($_SESSION['user_id'])) {
+            header('location: ' . URLROOT . '/users/login');
+            exit();
+        }
+
+        if ($this->userModel->acceptFollowRequest($id)) {
+            $_SESSION['message'] = [
+                'type' => 'success',
+                'text' => 'Follow request accepted.'
+            ];
+        } else {
+            $_SESSION['message'] = [
+                'type' => 'error',
+                'text' => 'Something went wrong. Check error logs for details.'
+            ];
+        }
+
+        $this->updateNotifications();
+    }
+
+    public function rejectFollowRequest($id) {
+        if (!isset($_SESSION['user_id'])) {
+            header('location: ' . URLROOT . '/users/login');
+            exit();
+        }
+
+        if ($this->userModel->rejectFollowRequest($id)) {
+            $_SESSION['message'] = [
+                'type' => 'success',
+                'text' => 'Follow request rejected.'
+            ];
+        } else {
+            $_SESSION['message'] = [
+                'type' => 'error',
+                'text' => 'Something went wrong. Check error logs for details.'
+            ];
+        }
+
+        $this->updateNotifications();
+    }
+
+    private function updateNotifications() {
+        $notifications = $this->userModel->getNotifications($_SESSION['user_id']);
+        $_SESSION['notifications'] = $notifications;
+        $_SESSION['unread_notifications_count'] = $this->userModel->getUnreadNotificationsCount($_SESSION['user_id']);
+    
+        header('location: ' . URLROOT);
+        exit();
+    }
+
+    private function view($view, $data = []) {
+        $viewPath = APPROOT . '/app/views/' . $view . '.php';
         if (file_exists($viewPath)) {
             require_once $viewPath;
         } else {

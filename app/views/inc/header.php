@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo SITENAME; ?></title>
+    <title>TweetApp</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/style.css">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -19,28 +20,31 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
-                <?php if(isset($_SESSION['user_id'])) : ?>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Notifications
-                            <?php if ($_SESSION['unread_notifications_count'] > 0) : ?>
-                                <span class="badge badge-danger"><?php echo $_SESSION['unread_notifications_count']; ?></span>
-                            <?php endif; ?>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                            <?php foreach ($_SESSION['notifications'] as $notification) : ?>
-                                <a class="dropdown-item" href="<?php echo URLROOT; ?>/notifications/viewNotification/<?php echo $notification->id; ?>"><?php echo $notification->message; ?></a>
-                            <?php endforeach; ?>
-                            <?php if (empty($_SESSION['notifications'])) : ?>
-                                <a class="dropdown-item" href="#">No notifications</a>
-                            <?php endif; ?>
-                        </div>
-                    </li>
+                <?php if (isset($_SESSION['user_id'])) : ?>
                     <li class="nav-item">
                         <a class="nav-link" href="<?php echo URLROOT; ?>/profile">Profile</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#" data-toggle="modal" data-target="#addTweetModal">Add Tweet</a>
+                    </li>
+                    <!-- Notifications Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Notifications <span class="badge badge-light"><?php echo count($_SESSION['notifications']); ?></span>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <?php if (empty($_SESSION['notifications'])): ?>
+                                <a class="dropdown-item" href="#">No notifications</a>
+                            <?php else: ?>
+                                <?php foreach ($_SESSION['notifications'] as $notification): ?>
+                                    <div class="dropdown-item">
+                                        <?php echo $notification->sender_name; ?> wants to follow you.
+                                        <a href="<?php echo URLROOT; ?>/notifications/acceptFollowRequest/<?php echo $notification->id; ?>" class="btn btn-success btn-sm"><i class="fas fa-check"></i></a>
+                                        <a href="<?php echo URLROOT; ?>/notifications/rejectFollowRequest/<?php echo $notification->id; ?>" class="btn btn-danger btn-sm"><i class="fas fa-times"></i></a>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </div>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="<?php echo URLROOT; ?>/users/logout">Logout</a>
@@ -185,4 +189,17 @@
         var remaining = maxLength - currentLength;
         document.getElementById('charCount').innerText = remaining + ' characters remaining';
     }
+
+    $(document).ready(function() {
+        // SweetAlert notifications
+        <?php if (isset($_SESSION['message'])): ?>
+            Swal.fire({
+                icon: '<?php echo $_SESSION['message']['type']; ?>',
+                title: '<?php echo $_SESSION['message']['text']; ?>'
+            });
+            <?php unset($_SESSION['message']); ?>
+        <?php endif; ?>
+    });
 </script>
+</body>
+</html>

@@ -1,14 +1,10 @@
 <?php
+
 class Tweet {
     private $db;
 
     public function __construct() {
         $this->db = new Database();
-    }
-
-    public function getTweets() {
-        $this->db->query('SELECT tweets.*, users.username FROM tweets INNER JOIN users ON tweets.user_id = users.id ORDER BY tweets.created_at DESC');
-        return $this->db->resultSet();
     }
 
     public function addTweet($data) {
@@ -18,10 +14,27 @@ class Tweet {
         return $this->db->execute();
     }
 
+    public function getTweets() {
+        $this->db->query('SELECT tweets.*, users.username FROM tweets JOIN users ON tweets.user_id = users.id ORDER BY tweets.created_at DESC');
+        return $this->db->resultSet();
+    }
+
     public function getUserTweets($userId) {
         $this->db->query('SELECT * FROM tweets WHERE user_id = :user_id ORDER BY created_at DESC');
         $this->db->bind(':user_id', $userId);
         return $this->db->resultSet();
     }
+
+    public function getAllTweets() {
+        $this->db->query('
+            SELECT tweets.*, users.username 
+            FROM tweets 
+            JOIN users ON tweets.user_id = users.id 
+            ORDER BY tweets.created_at DESC
+        ');
+        return $this->db->resultSet();
+    }
+    
 }
+
 ?>
