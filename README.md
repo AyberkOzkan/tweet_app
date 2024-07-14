@@ -94,8 +94,13 @@ CREATE TABLE `followers` (
 ## Projeden Görseller
 
 ![login](img\login.png)
+
 ![register](img\register.png)
+
 ![homepage](img\homepage.png)
+
 ![tweet](img\tweet.png)
+
 ![profile](img\profile.png)
+
 ![yprofile](img\yprofile.png)
