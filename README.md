@@ -93,14 +93,14 @@ CREATE TABLE `followers` (
 
 ## Projeden Görseller
 
-![login](img\login.png)
+![login](https://github.com/user-attachments/assets/b240f03e-c02f-4992-a89a-9e197e12248b)
 
-![register](img\register.png)
+![register](https://github.com/user-attachments/assets/f64d79b7-446f-4494-a0d1-f32c6a91e484)
 
-![homepage](img\homepage.png)
+![homepage](https://github.com/user-attachments/assets/713f6013-397a-44b9-bb14-02467d5e5b0a)
 
-![tweet](img\tweet.png)
+![tweet](https://github.com/user-attachments/assets/a5c186ed-70ba-4759-a2fc-9e28312477dd)
 
-![profile](img\profile.png)
+![yprofile](https://github.com/user-attachments/assets/0bafa554-d23a-430b-a51c-ec8673d50c00)
 
-![yprofile](img\yprofile.png)
+![profile](https://github.com/user-attachments/assets/20e58c4e-6b22-4b5c-871a-6b00c8e66c61)
